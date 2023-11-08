@@ -1,4 +1,4 @@
-# Convolutional Autoencoder for Image Denoising
+# EX_07 - Convolutional Autoencoder for Image Denoising
 
 ## AIM
 
@@ -31,23 +31,17 @@ from tensorflow.keras import models
 from tensorflow.keras.datasets import mnist
 import numpy as np
 import matplotlib.pyplot as plt
-
 (x_train, _), (x_test, _) = mnist.load_data()
-
 x_train.shape
-
 x_train_scaled = x_train.astype('float32') / 255.
 x_test_scaled = x_test.astype('float32') / 255.
 x_train_scaled = np.reshape(x_train_scaled, (len(x_train_scaled), 28, 28, 1))
 x_test_scaled = np.reshape(x_test_scaled, (len(x_test_scaled), 28, 28, 1))
-
 noise_factor = 0.5
 x_train_noisy = x_train_scaled + noise_factor * np.random.normal(loc=0.0, scale=1.0, size=x_train_scaled.shape) 
 x_test_noisy = x_test_scaled + noise_factor * np.random.normal(loc=0.0, scale=1.0, size=x_test_scaled.shape) 
-
 x_train_noisy = np.clip(x_train_noisy, 0., 1.)
 x_test_noisy = np.clip(x_test_noisy, 0., 1.)
-
 n = 10
 plt.figure(figsize=(20, 2))
 for i in range(1, n + 1):
@@ -72,19 +66,15 @@ x = layers.UpSampling2D((2, 2))(x)
 decoded = layers.Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
 autoencoder = keras.Model(input_img, decoded)
 ```
-
 ### Compile And Fit
 ```py
 autoencoder.summary()
-
 autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
-
 autoencoder.fit(x_train_noisy, x_train_scaled,
                 epochs=2,
                 batch_size=128,
                 shuffle=True,
                 validation_data=(x_test_noisy, x_test_scaled))
-
 decoded_imgs = autoencoder.predict(x_test_noisy)
 ```
 ### Plot the Images
@@ -114,7 +104,6 @@ for i in range(1, n + 1):
     ax.get_yaxis().set_visible(False)
 plt.show()
 ```
-
 ## OUTPUT
 ### Summary
 ![image](2.png)
